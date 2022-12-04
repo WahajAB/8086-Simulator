@@ -425,9 +425,6 @@ def mul_formselect():
     btn2 = Button(newWindow, text="Mem", height=2, width=15,
                   command=lambda: mul_createFormUni("Mem"), bg='#010329', fg='white')
     btn2.grid(row=2, column=0, rowspan=1)
-    btn3 = Button(newWindow, text="Value", height=2, width=15,
-                  command=lambda: mul_createFormUni("Value"), bg='#010329', fg='white')
-    btn3.grid(row=3, column=0, rowspan=1)
 
 # Division
 
