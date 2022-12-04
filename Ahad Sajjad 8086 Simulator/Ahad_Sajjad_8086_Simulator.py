@@ -1187,3 +1187,524 @@ def add_createFormSelector():
 
 def add():
     add_createFormSelector()
+#mov form selector code
+
+def mov_createFormSelector():
+    global aNewWindow
+    aNewWindow = Tk()
+    aNewWindow.title = "Mov MODE SELECTOR"
+    aNewWindow.configure(background='#010329')
+
+    lab1 = Label(aNewWindow, text="Select the mode of Move ", bg='#010329', fg='white')
+    lab1.grid(row=0, column=1)
+
+    but1 = Button(aNewWindow, text="REG <- REG", height=2,
+                  width=15, command=lambda: mov1(), bg='#010329', fg='white')
+    but1.grid(pady=1, row=1, column=1)
+
+    but2 = Button(aNewWindow, text="REG <- MEM", height=2,
+                  width=15, command=lambda: mov3(), bg='#010329', fg='white')
+    but2.grid(row=2, column=1)
+
+    but3 = Button(aNewWindow, text="MEM <- REG", height=2,
+                  width=15, command=lambda: mov2(), bg='#010329', fg='white')
+    but3.grid(row=3, column=1)
+
+    but4 = Button(aNewWindow, text="REG <- IMMEDIATE", height=2,
+                  width=15, command=lambda: mov_4_ri(), bg='#010329', fg='white')
+    but4.grid(row=4, column=1)
+
+    but5 = Button(aNewWindow, text="MEM <- IMMEDIATE", height=2,
+                  width=15, command=lambda: mov_5_mi(), bg='#010329', fg='white')
+    but5.grid(row=5, column=1)
+
+
+def mov():
+    mov_createFormSelector()
+
+# Cdq
+def cdq():
+    Reg_Values[3] = "0x0000"
+    reg_labels[3].config(text="DX: " + Reg_Values[3])
+    opcodegen.config(text = Ins[4])
+# Increment
+def inc_check(E1):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global reg_labels
+        i = Registers.index(S)
+        r1 = Reg_Values[i]
+        r3 = int(r1, 16) + 1
+        if (r3 > 65535):
+            error.config(text="Error: Value Overflows over 0xFFFF.")
+        else:
+            s3 = hex(r3)
+            # r - r
+            Reg_Values[i] = filler(s3)
+            reg_labels[i].config(text=S + ": " + Reg_Values[i])
+            Opcode = Ins[7];
+            D = "1"
+            Word = "1"
+            Mod = "11"
+            Reg = "000"
+            R_M = Reg_Table[i]
+            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            destruct(newWindow)
+
+
+def inc():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Enter Reg")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter", command=lambda: inc_check(entry1), bg='#010329', fg='white')
+    btn.grid(row=1, column=2)
+
+
+# Decrement
+def dec_check(E1):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global reg_labels
+        i = Registers.index(S)
+        r1 = Reg_Values[i]
+        r3 = int(r1, 16) - 1
+        if (r3 < 0):
+            error.config(text="Error: Value Underflows from 0x0000.")
+        else:
+            s3 = hex(r3)
+            # r - r
+            Reg_Values[i] = filler(s3)
+            reg_labels[i].config(text=S + ": " + Reg_Values[i])
+            Opcode = Ins[8];
+            D = "1"
+            Word = "1"
+            Mod = "11"
+            Reg = "001"
+            R_M = Reg_Table[i]
+            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            destruct(newWindow)
+
+
+def dec():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Enter Reg")
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter", command=lambda: dec_check(entry1), bg='#010329', fg='white')
+    btn.grid(row=1, column=2)
+
+#Mov4
+def mov4_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global reg_labels
+    x = entry1
+    y = "0x" + entry2
+    i = Registers.index(x)
+    Reg_Values[i] = filler(y)
+    opcode = "101"
+    D = "1"
+    WORD = "1"
+    Reg = Reg_Table[i]
+    Disp = convert(Reg_Values[i])
+    opcodegen.config(text= opcode + D + " " + WORD + Reg + " " + Disp)
+    reg_labels[i].config(text=x + ": " + Reg_Values[i])
+
+    destruct(newWindow)
+    destruct(aNewWindow)
+
+
+def mov4_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if validate(S1) == 0:
+        error.config(text="Invalid Input(s)")
+    elif (S not in Registers):
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        mov4_getEntry(S, S1)
+
+
+def mov4_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Immi: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: mov4_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def mov_4_ri():
+    mov4_createFormBi()
+
+#Mov5
+def mov5_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global reg_labels
+    x = entry1
+    y = "0x" + entry2
+    i = Mems.index(x)
+    Mem_Values[i] = filler(y)
+    Meg_labels[i].config(text=x + ": " + Mem_Values[i])
+    opcode = "1100 01"
+    D = "1"
+    WORD = "1"
+    MOD = "00"
+    Reg = "000"
+    R_M = "110"
+    Disp1 = convert (Mems[i])
+    Disp = convert (Mem_Values[i])
+    opcodegen.config(text=  opcode + D + WORD + " " + MOD + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
+    destruct(newWindow)
+    destruct(aNewWindow)
+
+
+def mov5_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S1 = E2.get()
+    if validate(S1) == 0:
+        error.config(text="Invalid Input(s)")
+    elif S not in Mems:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        mov5_getEntry(S, S1)
+
+
+def mov5_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Immi: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: mov5_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def mov_5_mi():
+    mov5_createFormBi()
+
+def sub():
+    sub_formselect()
+
+
+#SUBTRACTION
+def sub_check(text1, E0, E1):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    temp = "Do"
+    S0 = E0.get()
+    S0 = S0.upper()
+    S = E1.get()
+    if (S0 not in Registers):
+        error.config(text="Invalid Input(s)")
+    elif text1 == "Reg":
+        if (S.upper() not in Registers):
+            error.config(text="Invalid Input(s)")
+        else:
+            error.config(text="")
+            i2 = Registers.index(S)
+            temp = Reg_Values[i2]
+            Opcode = Ins[6];
+            D = "1"
+            iT = Registers.index(S0)
+            Reg = Reg_Table[iT] 
+            Mod = "11"
+            R_M = Reg_Table[i2]
+
+    elif text1 == "Mem":
+        if (S not in Mems):
+            error.config(text="Invalid Input(s)")
+        else:
+            error.config(text="")
+            i2 = Mems.index(S)
+            temp = Mems[i2]
+            Opcode = Ins[6];
+            D = "1"
+            Mod = "00"
+            iT = Registers.index(S0)
+            Reg = Reg_Table[iT]          
+            R_M = "110"
+            Disp = convert(S) 
+
+    elif text1 == "Value":
+        if validate(S) == 0:
+            error.config(text="Invalid Input(s)")
+        else:
+            error.config(text="")
+            temp = S
+            Opcode = "1000 00";
+            D = "0"
+            Mod = "00"
+            iT = Registers.index(S0)
+            R_M = Reg_Table[iT]
+            Reg = "101"
+            Disp = convert(hex(int(temp, 16)))
+
+    if temp != "Do":
+        i = Registers.index(S0)
+        tempReg = Reg_Values[i]
+        temp2 = int(tempReg, 16) - int(temp, 16)
+        if (temp2 < 0):
+            error.config(text="Error: Underflow - Value less than 0x0000.")
+        else:
+            temp3 = hex(temp2)
+            Reg_Values[i] = filler(temp3)
+            reg_labels[i].config(text=Registers[i] + ": " + Reg_Values[i])
+            Word = "1"
+            if text1 == "Reg":
+                opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            else: 
+                opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+            destruct(newWindow)
+
+def sub_createFormUni(text1):
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel1 = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel1.grid(row=0, column=0)
+    entry0 = Entry(newWindow, bg='black', fg='white')
+    entry0.grid(row=0, column=1)
+    templabel = Label(newWindow, text=text1 + ": ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: sub_check(text1, entry0, entry1), bg='#010329', fg='white')
+    btn.grid(row=1, column=2, rowspan=1)
+
+def sub_formselect():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='')
+    templabel = Label(newWindow, width=19, text="Select second operand: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    btn1 = Button(newWindow, text="Reg", height=2, width=18,
+                  command=lambda: sub_createFormUni("Reg"), bg='#010329', fg='white')
+    btn1.grid(row=1, column=0, rowspan=1)
+    btn2 = Button(newWindow, text="Mem", height=2, width=18,
+                  command=lambda: sub_createFormUni("Mem"), bg='#010329', fg='white')
+    btn2.grid(row=2, column=0, rowspan=1)
+    btn3 = Button(newWindow, text="Value", height=2, width=18,
+                  command=lambda: sub_createFormUni("Value"), bg='#010329', fg='white')
+    btn3.grid(row=3, column=0, rowspan=1)
+def initializer():
+    # opcode display
+    mylabel = Label(window, text="MACHINE CODE GENERATOR", font=(
+        'TIMESNEWROMAN 14 bold italic'), relief="raised", bd=2,foreground=headercolor, background=textbackground)
+    mylabel.place(x=65, y=375)
+    global opcodegen
+    opcodegen = Label(window, font=('TimesNewRoman 10 bold'), background="black", fg = "white", width = 31)
+    opcodegen.place(x=75, y=450)
+    # mem code
+    mlabel = Label(window, bd=2, height=2, width=20, relief="raised", text="MEMORY LOCATIONS", font=(
+        'TimesNewRoman 14 bold italic'), foreground=headercolor, background=textbackground)
+    mlabel.place(x=1105, y=525)
+    ml1 = Label(window, borderwidth=3, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[0] + ": " + Mem_Values[0])
+    ml1.place(x=935, y=635)
+
+    ml2 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[1] + ": " + Mem_Values[1])
+    ml2.place(x=1080, y=635)
+
+    ml3 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[2] + ": " + Mem_Values[2])
+    ml3.place(x=1225, y=635)
+
+    ml4 = Label(window, bd=2, width=12, relief="ridge", height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[3] + ": " + Mem_Values[3])
+    ml4.place(x=1370, y=635)
+
+    ml5 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[4] + ": " + Mem_Values[4])
+    ml5.place(x=935, y=695)
+
+    ml6 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[5] + ": " + Mem_Values[5])
+    ml6.place(x=1080, y=695)
+
+    ml7 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[6] + ": " + Mem_Values[6])
+    ml7.place(x=1225, y=695)
+
+    ml8 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[7] + ": " + Mem_Values[7])
+    ml8.place(x=1370, y=695)
+
+    ml9 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                foreground=buttontextbackground, background=buttoncolor, text=Mems[8] + ": " + Mem_Values[8])
+    ml9.place(x=935, y=755)
+
+    ml10 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[9] + ": " + Mem_Values[9])
+    ml10.place(x=1080, y=755)
+
+    ml11 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[10] + ": " + Mem_Values[10])
+    ml11.place(x=1225, y=755)
+
+    ml12 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[11] + ": " + Mem_Values[11])
+    ml12.place(x=1370, y=755)
+
+    ml13 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[12] + ": " + Mem_Values[12])
+    ml13.place(x=935, y=815)
+
+    ml14 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[13] + ": " + Mem_Values[13])
+    ml14.place(x=1080, y=815)
+
+    ml15 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[14] + ": " + Mem_Values[14])
+    ml15.place(x=1225, y=815)
+
+    ml16 = Label(window, relief="ridge", bd=2, width=12, height=2, font=('TimesNewRoman 11 bold'),
+                 foreground=buttontextbackground, background=buttoncolor, text=Mems[15] + ": " + Mem_Values[15])
+    ml16.place(x=1370, y=815)
+    global Meg_labels
+    Meg_labels = [ml1, ml2, ml3, ml4, ml5, ml6, ml7,
+                  ml8, ml9, ml10, ml11, ml12, ml13, ml14, ml15, ml16]
+
+    # reg code
+    labl = Label(window, relief="raised", bd=2, text="REGISTERS", width=20, height=2, font=(
+        'TimesNewRoman 14 bold italic'), foreground=headercolor, background=textbackground)
+    labl.place(x=1100, y=110)
+    l0 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[0] + " : " + Reg_Values[0])
+    l0.place(x=965, y=235)
+    l1 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[1] + " : " + Reg_Values[1])
+    l1.place(x=1155, y=235)
+    l2 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[2] + " : " + Reg_Values[2])
+    l2.place(x=1325, y=235)
+    l3 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[3] + " : " + Reg_Values[3])
+    l3.place(x=965, y=315)
+    l4 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[4] + " : " + Reg_Values[4])
+    l4.place(x=1155, y=315)
+    l5 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[5] + " : " + Reg_Values[5])
+    l5.place(x=1325, y=315)
+    l6 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[6] + " : " + Reg_Values[6])
+    l6.place(x=1055, y=385)
+    l7 = Label(window, relief="ridge", bd=2, height=2, width=13, font=('TimesNewRoman 12 bold '),
+               foreground=buttontextbackground, background=buttoncolor, text=Registers[7] + " : " + Reg_Values[7])
+    l7.place(x=1230, y=385)
+    global reg_labels
+    reg_labels = [l0, l1, l2, l3, l4, l5, l6, l7]
+    # button code
+    newLabel = Label(window, relief="raised", bd=2, height=2, width=20, text="8086 COMMANDS", font=(
+        'TimesNewRoman 14 bold italic '), foreground=headercolor, background=textbackground)
+    newLabel.place(x=463, y=213)
+
+    button16 = Button(window, bd=5, relief="raised", cursor='cross', text="MOV",
+                      height=2, width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: mov())
+    button16.place(x=440, y=300)
+    button1 = Button(window, bd=5, relief="raised", cursor='cross', text="DIV",
+                     height=2, activebackground='#9B8B91', width=12, font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: div_formselect())
+    button1.place(x=590, y=300)
+    button2 = Button(window, bd=5, relief="raised", cursor='cross', text="MUL",
+                     height=2, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, width=12, command=lambda: mul_formselect())
+    button2.place(x=440, y=370)
+    button3 = Button(window, bd=5, relief="raised", cursor='cross', text="ADD", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: add())
+    button3.place(x=590, y=370)
+    button4 = Button(window, bd=5, relief="raised", cursor='cross', text="CDQ", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: cdq())
+    button4.place(x=440, y=440)
+    button5 = Button(window, bd=5, relief="raised", cursor='cross', text="XCHG", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: xchg_createFormBi())
+    button5.place(x=590, y=440)
+    button6 = Button(window, bd=5, relief="raised", cursor='cross', text="SUB", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: sub())
+    button6.place(x=440, y=510)
+    button7 = Button(window, bd=5, relief="raised", cursor='cross', text="INC", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: inc())
+    button7.place(x=590, y=510)
+    button8 = Button(window, bd=5, relief="raised", cursor='cross', text="DEC", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: dec())
+    button8.place(x=440, y=580)
+    button9 = Button(window, bd=5, relief="raised", cursor='cross', text="AND", height=2,
+                     width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: AND_createFormBi())
+    button9.place(x=590, y=580)
+    button10 = Button(window, bd=5, relief="raised", cursor='cross', text="OR", height=2,
+                      width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: OR_createFormBi())
+    button10.place(x=440, y=650)
+    button11 = Button(window, bd=5, relief="raised", cursor='cross', text="NOT", height=2,
+                      width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: Not_())
+    button11.place(x=590, y=650)
+    button12 = Button(window, bd=5, relief="raised", cursor='cross', text="XOR", height=2,
+                      width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: XOR_createFormBi())
+    button12.place(x=440, y=720)
+    button13 = Button(window, bd=5, relief="raised", cursor='cross', activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, text="SHR", height=2,
+                      width=12, command=lambda: shr_createFormBi())
+    button13.place(x=590, y=720)
+    button14 = Button(window, bd=5, relief="raised", cursor='cross', text="SHL", height=2,
+                      width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: shl_createFormBi())
+    button14.place(x=515, y=795)
+
+initializer()
+mainloop()
