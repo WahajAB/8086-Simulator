@@ -1,7 +1,7 @@
 from tkinter import *
 window = Tk()
 window.title("8086 Simulator")
-window.resizable(False,False)
+window.resizable(False, False)
 window.state("zoomed")
 Registers = ["AX", "BX", "CX", "DX", "SI", "DI", "BP", "SP"]
 Reg_Values = ["0x1234", "0x9523", "0x5432",
@@ -11,10 +11,13 @@ Mems = ["0x3010", "0x3011", "0x3012", "0x3013", "0x3014", "0x3015", "0x3016",
 Mem_Values = ["0x00A0", "0x00B0", "0x00C0", "0x00D0", "0x00E0", "0x00F0", "0x00AB",
               "0x00AC", "0x00AD", "0x00AE", "0x00AF", "0x00BA", "0x00BB", "0x00BC", "0x00BD", "0x00BE"]
 Reg_Table = ["000", "011", "001", "010", "110", "111", "101", "100"]
-Instructions = ["MOV", "DIV", "MUL", "ADD", "CDQ", "XCHG", "SUB", "INC", "DEC", "AND", "OR", "NOT", "XOR", "SHR", "SHL"]
+Instructions = ["MOV", "DIV", "MUL", "ADD", "CDQ", "XCHG",
+                "SUB", "INC", "DEC", "AND", "OR", "NOT", "XOR", "SHR", "SHL"]
 
-Ins = ["1000 10", "1111 01", "1111 01", "0000 00", "1001 1001", "1000 01", "0010 10", "1111 11", "1111 11", "0010 00", "0000 10", "1111 01", "0011 00", "1100 00", "1100 00"]
-bg = PhotoImage(file="vecteezy_abstract-futuristic-background-blue-glowing-technology-sci_.png")
+Ins = ["1000 10", "1111 01", "1111 01", "0000 00", "1001 1001", "1000 01", "0010 10",
+       "1111 11", "1111 11", "0010 00", "0000 10", "1111 01", "0011 00", "1100 00", "1100 00"]
+bg = PhotoImage(
+    file="vecteezy_abstract-futuristic-background-blue-glowing-technology-sci_.png")
 
 lbl = Label(window, image=bg)
 lbl.place(x=0, y=0)
@@ -29,6 +32,8 @@ buttontextbackground = 'white'
 framecolor = "black"
 
 # Helpers
+
+
 def convert(value):
     value = value[2:]
     value = int(value, 16)
@@ -39,8 +44,9 @@ def convert(value):
     temp2 = temp[12:16]
     temp3 = temp[0:4]
     temp4 = temp[4:8]
-    value = temp1 + " " + temp2 + " " + temp3 + " " + temp4 
+    value = temp1 + " " + temp2 + " " + temp3 + " " + temp4
     return value
+
 
 def filler(value):
     value = value[2:]
@@ -64,6 +70,7 @@ def validate(value):
     except:
         return 0
 
+
 def validate2(value):
     try:
         value = int(value)
@@ -73,7 +80,8 @@ def validate2(value):
             return 1
     except:
         return 0
-#XChange
+# XChange
+
 
 def xchg_check(E1, E2):
     global Registers
@@ -111,7 +119,8 @@ def xchg_check(E1, E2):
         D = "1"
         WORD = "1"
         Reg = Reg_Table[i]
-        opcodegen.config(text = opcode + D + WORD + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M )
+        opcodegen.config(text=opcode + D + WORD + " " +
+                         Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
 
         destruct(newWindow)
 
@@ -134,8 +143,10 @@ def xchg_createFormBi():
                  command=lambda: xchg_check(entry1, entry2), fg='white', bg='#010329')
     btn.grid(row=0, column=2, rowspan=2)
 
-#Left Shift
-def shl_check(E1,entry2):
+# Left Shift
+
+
+def shl_check(E1, entry2):
     global Registers
     error = Label(newWindow, text="")
     error.grid(row=2, column=0, columnspan=3)
@@ -152,7 +163,7 @@ def shl_check(E1,entry2):
         i = Registers.index(S)
         r1 = Reg_Values[i]
         r3 = int(r1, 16)
-        r3 = r3<<S2
+        r3 = r3 << S2
         s3 = hex(r3)
         if (r3 > 65535):
             s3 = s3[3:]
@@ -166,8 +177,10 @@ def shl_check(E1,entry2):
         Mod = "00"
         Reg = "100"
         R_M = Reg_Table[i]
-        opcodegen.config(text=Opcode + D + WORD + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+        opcodegen.config(text=Opcode + D + WORD + " " +
+                         Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
         destruct(newWindow)
+
 
 def shl_createFormBi():
     global newWindow
@@ -178,7 +191,8 @@ def shl_createFormBi():
     templabel.grid(row=0, column=0)
     entry1 = Entry(newWindow, bg='black', fg='white')
     entry1.grid(row=0, column=1)
-    templabel2 = Label(newWindow, text="Num places: ", fg='white', bg='#010329')
+    templabel2 = Label(newWindow, text="Num places: ",
+                       fg='white', bg='#010329')
     templabel2.grid(row=1, column=0)
     entry2 = Entry(newWindow, bg='black', fg='white')
     entry2.grid(row=1, column=1)
@@ -187,8 +201,10 @@ def shl_createFormBi():
                  command=lambda: shl_check(entry1, entry2), fg='white', bg='#010329')
     btn.grid(row=0, column=2, rowspan=2)
 
-#Right Shift
-def shr_check(E1,E2):
+# Right Shift
+
+
+def shr_check(E1, E2):
     global Registers
     error = Label(newWindow, text="")
     error.grid(row=2, column=0, columnspan=3)
@@ -205,7 +221,7 @@ def shr_check(E1,E2):
         i = Registers.index(S)
         r1 = Reg_Values[i]
         r3 = int(r1, 16)
-        r3 = r3>>S2
+        r3 = r3 >> S2
         if (r3 > 65535):
             error.config(text="Error: Shift greater than 0xFFFF.")
         else:
@@ -219,29 +235,32 @@ def shr_check(E1,E2):
             Mod = "00"
             Reg = "101"
             R_M = Reg_Table[i]
-            opcodegen.config(text=Opcode + D + WORD + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            opcodegen.config(text=Opcode + D + WORD + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
             destruct(newWindow)
+
 
 def shr_createFormBi():
     global newWindow
     newWindow = Tk()
     newWindow.title("Input")
     newWindow.configure(background='#010329')
-    templabel = Label(newWindow, text="Reg: ",bg='#010329',fg='white')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
     templabel.grid(row=0, column=0)
-    entry1 = Entry(newWindow,bg='black',fg='white')
+    entry1 = Entry(newWindow, bg='black', fg='white')
     entry1.grid(row=0, column=1)
-    templabel2 = Label(newWindow, text="Num places: ",bg='#010329',fg='white')
+    templabel2 = Label(newWindow, text="Num places: ",
+                       bg='#010329', fg='white')
     templabel2.grid(row=1, column=0)
-    entry2 = Entry(newWindow,bg='black',fg='white')
+    entry2 = Entry(newWindow, bg='black', fg='white')
     entry2.grid(row=1, column=1)
 
     btn = Button(newWindow, text="Enter",
-                 command=lambda: shr_check(entry1,entry2),bg='#010329',fg='white')
+                 command=lambda: shr_check(entry1, entry2), bg='#010329', fg='white')
     btn.grid(row=0, column=2, rowspan=2)
 
 
-#XOR instruction
+# XOR instruction
 def XOR_getEntry(entry1, entry2):
     global Registers
     global Reg_Values
@@ -256,16 +275,16 @@ def XOR_getEntry(entry1, entry2):
     r3 = format(r3, "b")
     r4 = int(r2, 16)
     r4 = format(r4, "b")
-    while(len(r3)!= 16):
-            r3 = "0"+r3
-    while(len(r4)!= 16):
-            r4 = "0"+r4
+    while (len(r3) != 16):
+        r3 = "0"+r3
+    while (len(r4) != 16):
+        r4 = "0"+r4
     list1 = []
     list2 = []
     list3 = []
     list1[:0] = r3
     list2[:0] = r4
-    for a,b in zip(list1, list2):
+    for a, b in zip(list1, list2):
         if a == "1" and b == "0":
             list3.append("1")
         elif a == "0" and b == "1":
@@ -277,14 +296,16 @@ def XOR_getEntry(entry1, entry2):
     s3 = hex(r3)
     Reg_Values[i] = filler(s3)
     reg_labels[i].config(text=x + ": " + Reg_Values[i])
-    Opcode = Ins[12];
+    Opcode = Ins[12]
     D = "1"
     Word = "1"
     Mod = "11"
     Reg = Reg_Table[i]
     R_M = Reg_Table[i2]
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M)
     destruct(newWindow)
+
 
 def XOR_check(E1, E2):
     global Registers
@@ -319,7 +340,9 @@ def XOR_createFormBi():
                  command=lambda: XOR_check(entry1, entry2), bg='#010329', fg='white')
     btn.grid(row=0, column=2, rowspan=2)
 
-#Multiply
+# Multiply
+
+
 def mul_check(text1, E1):
     global Registers
     error = Label(newWindow, text="")
@@ -364,10 +387,13 @@ def mul_check(text1, E1):
             W = "1"
             Reg = "100"
             if text1 == "Reg":
-                opcodegen.config(text = Opcode + D + W + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
-            else: 
-                opcodegen.config(text = Opcode + D + W + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+                opcodegen.config(text=Opcode + D + W + " " +
+                                 Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            else:
+                opcodegen.config(text=Opcode + D + W + " " + Mod +
+                                 Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
+
 
 def mul_createFormUni(text1):
     global newWindow
@@ -390,7 +416,8 @@ def mul_formselect():
     newWindow.title("Input")
     newWindow.resizable(False, False)
     newWindow.configure(background='#010329')
-    templabel = Label(newWindow, text="Select multiplier: ", bg='#010329', fg='white')
+    templabel = Label(newWindow, text="Select multiplier: ",
+                      bg='#010329', fg='white')
     templabel.grid(row=0, column=0)
     btn1 = Button(newWindow, text="Reg", height=2, width=15,
                   command=lambda: mul_createFormUni("Reg"), bg='#010329', fg='white')
@@ -402,7 +429,9 @@ def mul_formselect():
                   command=lambda: mul_createFormUni("Value"), bg='#010329', fg='white')
     btn3.grid(row=3, column=0, rowspan=1)
 
-#Division
+# Division
+
+
 def div_check(text1, E1):
     global Registers
     error = Label(newWindow, text="")
@@ -446,10 +475,14 @@ def div_check(text1, E1):
             W = "1"
             Reg = "110"
             if text1 == "Reg":
-                opcodegen.config(text = Opcode + D + W + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
-            else: 
-                opcodegen.config(text = Opcode + D + W + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+                opcodegen.config(text=Opcode + D + W + " " +
+                                 Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            else:
+                opcodegen.config(text=Opcode + D + W + " " + Mod +
+                                 Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
+
+
 def div_createFormUni(text1):
     global newWindow
     newWindow = Tk()
@@ -464,13 +497,15 @@ def div_createFormUni(text1):
                  command=lambda: div_check(text1, entry1), bg='#010329', fg='white')
     btn.grid(row=1, column=2, rowspan=1)
 
+
 def div_formselect():
     global newWindow
     newWindow = Tk()
     newWindow.title("Input")
     newWindow.resizable(False, False)
     newWindow.configure(background='#010329')
-    templabel = Label(newWindow, text="Select divisor: ", bg='#010329', fg='white')
+    templabel = Label(newWindow, text="Select divisor: ",
+                      bg='#010329', fg='white')
     templabel.grid(row=0, column=0)
     btn1 = Button(newWindow, text="Reg", height=2, width=15,
                   command=lambda: div_createFormUni("Reg"), bg='#010329', fg='white')
@@ -483,6 +518,7 @@ def div_formselect():
     btn3.grid(row=3, column=0, rowspan=1)
 # Not
 
+
 def Not_():
     global newWindow
     newWindow = Tk()
@@ -493,7 +529,8 @@ def Not_():
     templabel.grid(row=1, column=0)
     entry1 = Entry(newWindow, bg='black', fg='white')
     entry1.grid(row=1, column=1)
-    btn = Button(newWindow, text="Enter", command=lambda: Not_Check(entry1), bg='#010329', fg='white')
+    btn = Button(newWindow, text="Enter", command=lambda: Not_Check(
+        entry1), bg='#010329', fg='white')
     btn.grid(row=1, column=2)
 
 
@@ -513,7 +550,7 @@ def Not_Check(entry1):
         r1 = Reg_Values[i]
         r3 = int(r1, 16)
         r3 = format(r3, "b")
-        while(len(r3)!= 16):
+        while (len(r3) != 16):
             r3 = "0" + r3
         list1 = []
         list2 = []
@@ -528,16 +565,18 @@ def Not_Check(entry1):
         s3 = hex(r3)
         Reg_Values[i] = filler(s3)
         reg_labels[i].config(text=S + ": " + Reg_Values[i])
-        Opcode = Ins[11];
+        Opcode = Ins[11]
         D = "1"
         Word = "1"
         Mod = "11"
         Reg = "010"
         R_M = Reg_Table[i]
-        opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+        opcodegen.config(text=Opcode + D + Word + " " +
+                         Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
         destruct(newWindow)
 
-#AND Instruction
+# AND Instruction
+
 
 def AND_getEntry(entry1, entry2):
     global Registers
@@ -553,16 +592,16 @@ def AND_getEntry(entry1, entry2):
     r3 = format(r3, "b")
     r4 = int(r2, 16)
     r4 = format(r4, "b")
-    while(len(r3) != 16):
-            r3 = "0" + r3
-    while(len(r4) != 16):
-            r4 = "0" + r4
+    while (len(r3) != 16):
+        r3 = "0" + r3
+    while (len(r4) != 16):
+        r4 = "0" + r4
     list1 = []
     list2 = []
     list3 = []
     list1[:0] = r3
     list2[:0] = r4
-    for a,b in zip(list1, list2):
+    for a, b in zip(list1, list2):
         if a == "1" and b == "1":
             list3.append("1")
         else:
@@ -572,14 +611,16 @@ def AND_getEntry(entry1, entry2):
     s3 = hex(r3)
     Reg_Values[i] = filler(s3)
     reg_labels[i].config(text=x + ": " + Reg_Values[i])
-    Opcode = Ins[9];
+    Opcode = Ins[9]
     D = "1"
     Word = "1"
     Mod = "11"
     Reg = Reg_Table[i]
     R_M = Reg_Table[i2]
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M)
     destruct(newWindow)
+
 
 def AND_check(E1, E2):
     global Registers
@@ -614,7 +655,9 @@ def AND_createFormBi():
                  command=lambda: AND_check(entry1, entry2), bg='#010329', fg='white')
     btn.grid(row=0, column=2, rowspan=2)
 
-#OR instruction
+# OR instruction
+
+
 def OR_getEntry(entry1, entry2):
     global Registers
     global Reg_Values
@@ -629,16 +672,16 @@ def OR_getEntry(entry1, entry2):
     r3 = format(r3, "b")
     r4 = int(r2, 16)
     r4 = format(r4, "b")
-    while(len(r3)!= 16):
-            r3 = "0" + r3
-    while(len(r4)!= 16):
-            r4 = "0" + r4
+    while (len(r3) != 16):
+        r3 = "0" + r3
+    while (len(r4) != 16):
+        r4 = "0" + r4
     list1 = []
     list2 = []
     list3 = []
     list1[:0] = r3
     list2[:0] = r4
-    for a,b in zip(list1, list2):
+    for a, b in zip(list1, list2):
         if a == "1" or b == "1":
             list3.append("1")
         else:
@@ -648,14 +691,16 @@ def OR_getEntry(entry1, entry2):
     s3 = hex(r3)
     Reg_Values[i] = filler(s3)
     reg_labels[i].config(text=x + ": " + Reg_Values[i])
-    Opcode = Ins[10];
+    Opcode = Ins[10]
     D = "1"
     Word = "1"
     Mod = "11"
     Reg = Reg_Table[i]
     R_M = Reg_Table[i2]
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M)
     destruct(newWindow)
+
 
 def OR_check(E1, E2):
     global Registers
@@ -705,15 +750,17 @@ def mov1_getEntry(entry1, entry2):
     Reg_Values[i] = Reg_Values[i2]
     reg_labels[i].config(text=x + " : " + Reg_Values[i])
     reg_labels[i2].config(text=y + " : " + Reg_Values[i2])
-    Opcode = Ins[0];
+    Opcode = Ins[0]
     D = "1"
     Word = "1"
     Mod = "11"
     Reg = Reg_Table[i]
     R_M = Reg_Table[i2]
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M)
     destruct(newWindow)
     destruct(aNewWindow)
+
 
 def mov1_check(E1, E2):
     global Registers
@@ -728,6 +775,7 @@ def mov1_check(E1, E2):
     else:
         error.config(text="")
         mov1_getEntry(S, S1)
+
 
 def mov1_createFormBi():
     global newWindow
@@ -749,6 +797,7 @@ def mov1_createFormBi():
 
 #Mov (Mem <- Reg)
 
+
 def mov2_getEntry(entry1, entry2):
     global Registers
     global Reg_Values
@@ -759,14 +808,15 @@ def mov2_getEntry(entry1, entry2):
     i2 = Mems.index(y)
     Mem_Values[i2] = Reg_Values[i]
     Meg_labels[i2].config(text=y + " : " + Mem_Values[i2])
-    Opcode = Ins[0];
+    Opcode = Ins[0]
     D = "0"
     Word = "1"
     Mod = "00"
     Reg = Reg_Table[i]
     R_M = "110"
     Disp = convert(Mems[i2])
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
     destruct(newWindow)
     destruct(aNewWindow)
 
@@ -818,14 +868,15 @@ def mov3_getEntry(entry1, entry2):
     i2 = Mems.index(y)
     Reg_Values[i] = Mem_Values[i2]
     reg_labels[i].config(text=x + " : " + Reg_Values[i])
-    Opcode = Ins[0];
+    Opcode = Ins[0]
     D = "1"
     Word = "1"
     Mod = "00"
     Reg = Reg_Table[i]
     R_M = "110"
     Disp = convert(Mems[i2])
-    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+    opcodegen.config(text=Opcode + D + Word + " " + Mod +
+                     Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
     destruct(newWindow)
     destruct(aNewWindow)
 
@@ -904,13 +955,14 @@ def add_rr_check(E1, E2):
             # r - r
             Reg_Values[i] = filler(s3)
             reg_labels[i].config(text=S + ": " + Reg_Values[i])
-            Opcode = Ins[3];
+            Opcode = Ins[3]
             D = "1"
             Word = "1"
             Mod = "11"
             Reg = Reg_Table[i]
             R_M = Reg_Table[i2]
-            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
             destruct(newWindow)
             destruct(aNewWindow)
 
@@ -961,14 +1013,15 @@ def add_rm_check(E1, E2):
             # r-m
             Reg_Values[i] = filler(s3)
             reg_labels[i].config(text=S + ": " + Reg_Values[i])
-            Opcode = Ins[3];
+            Opcode = Ins[3]
             D = "1"
             Word = "1"
             Mod = "00"
             Reg = Reg_Table[i]
             R_M = "110"
             Disp = convert(Mems[i2])
-            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
             destruct(aNewWindow)
 
@@ -1019,14 +1072,15 @@ def add_mr_check(E1, E2):
             # r-m
             Mem_Values[i2] = filler(s3)
             Meg_labels[i2].config(text=S1 + ": " + Mem_Values[i2])
-            Opcode = Ins[3];
+            Opcode = Ins[3]
             D = "0"
             Word = "1"
             Mod = "00"
             Reg = Reg_Table[i]
             R_M = "110"
             Disp = convert(Mems[i2])
-            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
             destruct(aNewWindow)
 
@@ -1072,13 +1126,14 @@ def add_ri_check(E1, E2):
             temp3 = hex(temp2)
             Reg_Values[i2] = filler(temp3)
             reg_labels[i2].config(text=S + " : " + Reg_Values[i2])
-            Opcode = "1000 00";
+            Opcode = "1000 00"
             D = "0"
             Word = "1"
             Mod = "00"
             Reg = Reg_Table[i2]
             R_M = "110"
-            opcodegen.config(text=Opcode + D + Word + " " + Mod +  R_M + Reg[0:2] + " " + Reg[2:3] )
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + R_M + Reg[0:2] + " " + Reg[2:3])
 
             destruct(newWindow)
             destruct(aNewWindow)
@@ -1102,6 +1157,7 @@ def add_ri_createFormBi():
                  command=lambda: add_ri_check(entry2, entry1), bg='#010329', fg='white')
     btn.grid(row=0, column=2, rowspan=2)
 
+
 def add_mi_check(E1, E2):
     error = Label(newWindow, text="")
     error.grid(row=2, column=0, columnspan=3)
@@ -1122,15 +1178,16 @@ def add_mi_check(E1, E2):
             temp3 = hex(temp2)
             Mem_Values[i2] = filler(temp3)
             Meg_labels[i2].config(text=S + " : " + Mem_Values[i2])
-            Opcode = "1000 00";
+            Opcode = "1000 00"
             D = "0"
             Word = "1"
             Mod = "00"
             Reg = "000"
             R_M = "110"
-            Disp1 = convert (Mems[i2])
-            Disp = convert (Mem_Values[i2])
-            opcodegen.config(text=  Opcode + D + WORD + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
+            Disp1 = convert(Mems[i2])
+            Disp = convert(Mem_Values[i2])
+            opcodegen.config(text=Opcode + D + WORD + " " + Mod +
+                             Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
             destruct(newWindow)
             destruct(aNewWindow)
 
@@ -1161,7 +1218,8 @@ def add_createFormSelector():
     aNewWindow.resizable(False, False)
     aNewWindow.configure(background='#010329')
 
-    lab1 = Label(aNewWindow, text="Select the mode of addition ", bg='#010329', fg='white')
+    lab1 = Label(aNewWindow, text="Select the mode of addition ",
+                 bg='#010329', fg='white')
     lab1.grid(row=0, column=1)
 
     but1 = Button(aNewWindow, text="REG + REG", height=2,
@@ -1187,7 +1245,8 @@ def add_createFormSelector():
 
 def add():
     add_createFormSelector()
-#mov form selector code
+# mov form selector code
+
 
 def mov_createFormSelector():
     global aNewWindow
@@ -1195,7 +1254,8 @@ def mov_createFormSelector():
     aNewWindow.title = "Mov MODE SELECTOR"
     aNewWindow.configure(background='#010329')
 
-    lab1 = Label(aNewWindow, text="Select the mode of Move ", bg='#010329', fg='white')
+    lab1 = Label(aNewWindow, text="Select the mode of Move ",
+                 bg='#010329', fg='white')
     lab1.grid(row=0, column=1)
 
     but1 = Button(aNewWindow, text="REG <- REG", height=2,
@@ -1223,11 +1283,15 @@ def mov():
     mov_createFormSelector()
 
 # Cdq
+
+
 def cdq():
     Reg_Values[3] = "0x0000"
     reg_labels[3].config(text="DX: " + Reg_Values[3])
-    opcodegen.config(text = Ins[4])
+    opcodegen.config(text=Ins[4])
 # Increment
+
+
 def inc_check(E1):
     global Registers
     error = Label(newWindow, text="")
@@ -1250,13 +1314,14 @@ def inc_check(E1):
             # r - r
             Reg_Values[i] = filler(s3)
             reg_labels[i].config(text=S + ": " + Reg_Values[i])
-            Opcode = Ins[7];
+            Opcode = Ins[7]
             D = "1"
             Word = "1"
             Mod = "11"
             Reg = "000"
             R_M = Reg_Table[i]
-            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
             destruct(newWindow)
 
 
@@ -1270,7 +1335,8 @@ def inc():
     templabel.grid(row=1, column=0)
     entry1 = Entry(newWindow, bg='black', fg='white')
     entry1.grid(row=1, column=1)
-    btn = Button(newWindow, text="Enter", command=lambda: inc_check(entry1), bg='#010329', fg='white')
+    btn = Button(newWindow, text="Enter", command=lambda: inc_check(
+        entry1), bg='#010329', fg='white')
     btn.grid(row=1, column=2)
 
 
@@ -1297,13 +1363,14 @@ def dec_check(E1):
             # r - r
             Reg_Values[i] = filler(s3)
             reg_labels[i].config(text=S + ": " + Reg_Values[i])
-            Opcode = Ins[8];
+            Opcode = Ins[8]
             D = "1"
             Word = "1"
             Mod = "11"
             Reg = "001"
             R_M = Reg_Table[i]
-            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            opcodegen.config(text=Opcode + D + Word + " " +
+                             Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
             destruct(newWindow)
 
 
@@ -1316,10 +1383,13 @@ def dec():
     templabel.grid(row=1, column=0)
     entry1 = Entry(newWindow, bg='black', fg='white')
     entry1.grid(row=1, column=1)
-    btn = Button(newWindow, text="Enter", command=lambda: dec_check(entry1), bg='#010329', fg='white')
+    btn = Button(newWindow, text="Enter", command=lambda: dec_check(
+        entry1), bg='#010329', fg='white')
     btn.grid(row=1, column=2)
 
-#Mov4
+# Mov4
+
+
 def mov4_getEntry(entry1, entry2):
     global Registers
     global Reg_Values
@@ -1333,7 +1403,7 @@ def mov4_getEntry(entry1, entry2):
     WORD = "1"
     Reg = Reg_Table[i]
     Disp = convert(Reg_Values[i])
-    opcodegen.config(text= opcode + D + " " + WORD + Reg + " " + Disp)
+    opcodegen.config(text=opcode + D + " " + WORD + Reg + " " + Disp)
     reg_labels[i].config(text=x + ": " + Reg_Values[i])
 
     destruct(newWindow)
@@ -1377,7 +1447,9 @@ def mov4_createFormBi():
 def mov_4_ri():
     mov4_createFormBi()
 
-#Mov5
+# Mov5
+
+
 def mov5_getEntry(entry1, entry2):
     global Registers
     global Reg_Values
@@ -1393,9 +1465,10 @@ def mov5_getEntry(entry1, entry2):
     MOD = "00"
     Reg = "000"
     R_M = "110"
-    Disp1 = convert (Mems[i])
-    Disp = convert (Mem_Values[i])
-    opcodegen.config(text=  opcode + D + WORD + " " + MOD + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
+    Disp1 = convert(Mems[i])
+    Disp = convert(Mem_Values[i])
+    opcodegen.config(text=opcode + D + WORD + " " + MOD +
+                     Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
     destruct(newWindow)
     destruct(aNewWindow)
 
@@ -1436,11 +1509,12 @@ def mov5_createFormBi():
 def mov_5_mi():
     mov5_createFormBi()
 
+
 def sub():
     sub_formselect()
 
 
-#SUBTRACTION
+# SUBTRACTION
 def sub_check(text1, E0, E1):
     global Registers
     error = Label(newWindow, text="")
@@ -1458,10 +1532,10 @@ def sub_check(text1, E0, E1):
             error.config(text="")
             i2 = Registers.index(S)
             temp = Reg_Values[i2]
-            Opcode = Ins[6];
+            Opcode = Ins[6]
             D = "1"
             iT = Registers.index(S0)
-            Reg = Reg_Table[iT] 
+            Reg = Reg_Table[iT]
             Mod = "11"
             R_M = Reg_Table[i2]
 
@@ -1472,13 +1546,13 @@ def sub_check(text1, E0, E1):
             error.config(text="")
             i2 = Mems.index(S)
             temp = Mems[i2]
-            Opcode = Ins[6];
+            Opcode = Ins[6]
             D = "1"
             Mod = "00"
             iT = Registers.index(S0)
-            Reg = Reg_Table[iT]          
+            Reg = Reg_Table[iT]
             R_M = "110"
-            Disp = convert(S) 
+            Disp = convert(S)
 
     elif text1 == "Value":
         if validate(S) == 0:
@@ -1486,7 +1560,7 @@ def sub_check(text1, E0, E1):
         else:
             error.config(text="")
             temp = S
-            Opcode = "1000 00";
+            Opcode = "1000 00"
             D = "0"
             Mod = "00"
             iT = Registers.index(S0)
@@ -1506,10 +1580,13 @@ def sub_check(text1, E0, E1):
             reg_labels[i].config(text=Registers[i] + ": " + Reg_Values[i])
             Word = "1"
             if text1 == "Reg":
-                opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
-            else: 
-                opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+                opcodegen.config(text=Opcode + D + Word + " " +
+                                 Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            else:
+                opcodegen.config(text=Opcode + D + Word + " " +
+                                 Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
+
 
 def sub_createFormUni(text1):
     global newWindow
@@ -1529,13 +1606,15 @@ def sub_createFormUni(text1):
                  command=lambda: sub_check(text1, entry0, entry1), bg='#010329', fg='white')
     btn.grid(row=1, column=2, rowspan=1)
 
+
 def sub_formselect():
     global newWindow
     newWindow = Tk()
     newWindow.title("Input")
     newWindow.resizable(False, False)
     newWindow.configure(background='')
-    templabel = Label(newWindow, width=19, text="Select second operand: ", bg='#010329', fg='white')
+    templabel = Label(newWindow, width=19,
+                      text="Select second operand: ", bg='#010329', fg='white')
     templabel.grid(row=0, column=0)
     btn1 = Button(newWindow, text="Reg", height=2, width=18,
                   command=lambda: sub_createFormUni("Reg"), bg='#010329', fg='white')
@@ -1546,13 +1625,16 @@ def sub_formselect():
     btn3 = Button(newWindow, text="Value", height=2, width=18,
                   command=lambda: sub_createFormUni("Value"), bg='#010329', fg='white')
     btn3.grid(row=3, column=0, rowspan=1)
+
+
 def initializer():
     # opcode display
     mylabel = Label(window, text="MACHINE CODE GENERATOR", font=(
-        'TIMESNEWROMAN 14 bold italic'), relief="raised", bd=2,foreground=headercolor, background=textbackground)
+        'TIMESNEWROMAN 14 bold italic'), relief="raised", bd=2, foreground=headercolor, background=textbackground)
     mylabel.place(x=65, y=375)
     global opcodegen
-    opcodegen = Label(window, font=('TimesNewRoman 10 bold'), background="black", fg = "white", width = 31)
+    opcodegen = Label(window, font=('TimesNewRoman 10 bold'),
+                      background="black", fg="white", width=31)
     opcodegen.place(x=75, y=450)
     # mem code
     mlabel = Label(window, bd=2, height=2, width=20, relief="raised", text="MEMORY LOCATIONS", font=(
@@ -1705,6 +1787,7 @@ def initializer():
     button14 = Button(window, bd=5, relief="raised", cursor='cross', text="SHL", height=2,
                       width=12, activebackground='#9B8B91', font=('TimesNewRoman 12 bold '), foreground=buttontextbackground, background=buttoncolor, command=lambda: shl_createFormBi())
     button14.place(x=515, y=795)
+
 
 initializer()
 mainloop()
