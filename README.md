@@ -14,6 +14,6 @@ Prerequisite: Any Python IDE.
 NOTES:
 
 1. Task 2 Link contains the Animation Simulator 
-2. Task 3 contains the video explanation of the functionality of 8086 simulator
+2. Task 3 LINK contains the video explanation of the functionality of 8086 simulator
 
 Made by: Wahaj Ahmad, Uneeb bin Aftab, Suhaib Aslam, Ahad Sajjad
