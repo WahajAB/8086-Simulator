@@ -450,3 +450,428 @@ def div_check(text1, E1):
             else: 
                 opcodegen.config(text = Opcode + D + W + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
             destruct(newWindow)
+def div_createFormUni(text1):
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text=text1 + ": ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: div_check(text1, entry1), bg='#010329', fg='white')
+    btn.grid(row=1, column=2, rowspan=1)
+
+def div_formselect():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Select divisor: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    btn1 = Button(newWindow, text="Reg", height=2, width=15,
+                  command=lambda: div_createFormUni("Reg"), bg='#010329', fg='white')
+    btn1.grid(row=1, column=0, rowspan=1)
+    btn2 = Button(newWindow, text="Mem", height=2, width=15,
+                  command=lambda: div_createFormUni("Mem"), bg='#010329', fg='white')
+    btn2.grid(row=2, column=0, rowspan=1)
+    btn3 = Button(newWindow, text="Value", height=2, width=15,
+                  command=lambda: div_createFormUni("Value"), bg='#010329', fg='white')
+    btn3.grid(row=3, column=0, rowspan=1)
+# Not
+
+def Not_():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Enter Reg")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter", command=lambda: Not_Check(entry1), bg='#010329', fg='white')
+    btn.grid(row=1, column=2)
+
+
+def Not_Check(entry1):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = entry1.get()
+    S = S.upper()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global reg_labels
+        i = Registers.index(S)
+        r1 = Reg_Values[i]
+        r3 = int(r1, 16)
+        r3 = format(r3, "b")
+        while(len(r3)!= 16):
+            r3 = "0" + r3
+        list1 = []
+        list2 = []
+        list1[:0] = r3
+        for a in list1:
+            if a == "0":
+                list2.append("1")
+            if a == "1":
+                list2.append("0")
+        r3 = "".join(list2)
+        r3 = int(r3, 2)
+        s3 = hex(r3)
+        Reg_Values[i] = filler(s3)
+        reg_labels[i].config(text=S + ": " + Reg_Values[i])
+        Opcode = Ins[11];
+        D = "1"
+        Word = "1"
+        Mod = "11"
+        Reg = "010"
+        R_M = Reg_Table[i]
+        opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+        destruct(newWindow)
+
+#AND Instruction
+
+def AND_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global reg_labels
+    x = entry1
+    y = entry2
+    i = Registers.index(x)
+    i2 = Registers.index(y)
+    r1 = Reg_Values[i]
+    r2 = Reg_Values[i2]
+    r3 = int(r1, 16)
+    r3 = format(r3, "b")
+    r4 = int(r2, 16)
+    r4 = format(r4, "b")
+    while(len(r3) != 16):
+            r3 = "0" + r3
+    while(len(r4) != 16):
+            r4 = "0" + r4
+    list1 = []
+    list2 = []
+    list3 = []
+    list1[:0] = r3
+    list2[:0] = r4
+    for a,b in zip(list1, list2):
+        if a == "1" and b == "1":
+            list3.append("1")
+        else:
+            list3.append("0")
+    r3 = "".join(list3)
+    r3 = int(r3, 2)
+    s3 = hex(r3)
+    Reg_Values[i] = filler(s3)
+    reg_labels[i].config(text=x + ": " + Reg_Values[i])
+    Opcode = Ins[9];
+    D = "1"
+    Word = "1"
+    Mod = "11"
+    Reg = Reg_Table[i]
+    R_M = Reg_Table[i2]
+    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    destruct(newWindow)
+
+def AND_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    S1 = S1.upper()
+    if S and S1 not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        AND_getEntry(S, S1)
+
+
+def AND_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("AND Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg 1: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Reg 2: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: AND_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+#OR instruction
+def OR_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global reg_labels
+    x = entry1
+    y = entry2
+    i = Registers.index(x)
+    i2 = Registers.index(y)
+    r1 = Reg_Values[i]
+    r2 = Reg_Values[i2]
+    r3 = int(r1, 16)
+    r3 = format(r3, "b")
+    r4 = int(r2, 16)
+    r4 = format(r4, "b")
+    while(len(r3)!= 16):
+            r3 = "0" + r3
+    while(len(r4)!= 16):
+            r4 = "0" + r4
+    list1 = []
+    list2 = []
+    list3 = []
+    list1[:0] = r3
+    list2[:0] = r4
+    for a,b in zip(list1, list2):
+        if a == "1" or b == "1":
+            list3.append("1")
+        else:
+            list3.append("0")
+    r3 = "".join(list3)
+    r3 = int(r3, 2)
+    s3 = hex(r3)
+    Reg_Values[i] = filler(s3)
+    reg_labels[i].config(text=x + ": " + Reg_Values[i])
+    Opcode = Ins[10];
+    D = "1"
+    Word = "1"
+    Mod = "11"
+    Reg = Reg_Table[i]
+    R_M = Reg_Table[i2]
+    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    destruct(newWindow)
+
+def OR_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    S1 = S1.upper()
+    if S and S1 not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        OR_getEntry(S, S1)
+
+
+def OR_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("OR Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg 1: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Reg 2: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: OR_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+#MOV (Reg <- Reg)
+
+
+def mov1_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global reg_labels
+    x = entry1
+    y = entry2
+    i = Registers.index(x)
+    i2 = Registers.index(y)
+    Reg_Values[i] = Reg_Values[i2]
+    reg_labels[i].config(text=x + " : " + Reg_Values[i])
+    reg_labels[i2].config(text=y + " : " + Reg_Values[i2])
+    Opcode = Ins[0];
+    D = "1"
+    Word = "1"
+    Mod = "11"
+    Reg = Reg_Table[i]
+    R_M = Reg_Table[i2]
+    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+    destruct(newWindow)
+    destruct(aNewWindow)
+
+def mov1_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    S1 = S1.upper()
+    if S and S1 not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        mov1_getEntry(S, S1)
+
+def mov1_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: mov1_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+#Mov (Mem <- Reg)
+
+def mov2_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global Meg_labels
+    x = entry1
+    y = entry2
+    i = Registers.index(x)
+    i2 = Mems.index(y)
+    Mem_Values[i2] = Reg_Values[i]
+    Meg_labels[i2].config(text=y + " : " + Mem_Values[i2])
+    Opcode = Ins[0];
+    D = "0"
+    Word = "1"
+    Mod = "00"
+    Reg = Reg_Table[i]
+    R_M = "110"
+    Disp = convert(Mems[i2])
+    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+    destruct(newWindow)
+    destruct(aNewWindow)
+
+
+def mov2_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    elif S1 not in Mems:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        mov2_getEntry(S, S1)
+
+
+def mov2_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: mov2_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+#Mov (Reg <- Mem)
+
+
+def mov3_getEntry(entry1, entry2):
+    global Registers
+    global Reg_Values
+    global Meg_labels
+    x = entry1
+    y = entry2
+    i = Registers.index(x)
+    i2 = Mems.index(y)
+    Reg_Values[i] = Mem_Values[i2]
+    reg_labels[i].config(text=x + " : " + Reg_Values[i])
+    Opcode = Ins[0];
+    D = "1"
+    Word = "1"
+    Mod = "00"
+    Reg = Reg_Table[i]
+    R_M = "110"
+    Disp = convert(Mems[i2])
+    opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+    destruct(newWindow)
+    destruct(aNewWindow)
+
+
+def mov3_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    elif S1 not in Mems:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        mov3_getEntry(S, S1)
+
+
+def mov3_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    templabel2 = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel2.grid(row=0, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=0, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: mov3_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def mov1():
+    mov1_createFormBi()
+
+
+def mov2():
+    mov2_createFormBi()
+
+
+def mov3():
+    mov3_createFormBi()
