@@ -3,4 +3,4 @@
 
 Prerequisite: Any Python IDE.
 
-#Made by: Wahaj Ahmad, Uneeb bin Aftab, Suhaib Aslam, Ahad Sajjad
+Made by: Wahaj Ahmad, Uneeb bin Aftab, Suhaib Aslam, Ahad Sajjad
