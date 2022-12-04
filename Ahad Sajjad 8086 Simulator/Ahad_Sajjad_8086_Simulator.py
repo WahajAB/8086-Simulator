@@ -875,3 +875,315 @@ def mov2():
 
 def mov3():
     mov3_createFormBi()
+
+
+# Addition
+def add_rr_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    S1 = S1.upper()
+    if S and S1 not in Registers:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global reg_labels
+        i = Registers.index(S)
+        i2 = Registers.index(S1)
+        r1 = Reg_Values[i]
+        r2 = Reg_Values[i2]
+        r3 = int(r1, 16) + int(r2, 16)
+        if (r3 > 65535):
+            error.config(text="Error: Sum greater than 0xFFFF.")
+        else:
+            s3 = hex(r3)
+            # r - r
+            Reg_Values[i] = filler(s3)
+            reg_labels[i].config(text=S + ": " + Reg_Values[i])
+            Opcode = Ins[3];
+            D = "1"
+            Word = "1"
+            Mod = "11"
+            Reg = Reg_Table[i]
+            R_M = Reg_Table[i2]
+            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M)
+            destruct(newWindow)
+            destruct(aNewWindow)
+
+
+def add_rr_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: add_rr_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def add_rm_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    elif S1 not in Mems:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global Meg_labels
+        i = Registers.index(S)
+        i2 = Mems.index(S1)
+        r1 = Mem_Values[i2]
+        r2 = Reg_Values[i]
+        r3 = int(r1, 16) + int(r2, 16)
+        if (r3 > 65535):
+            error.config(text="Error: Sum greater than 0xFFFF.")
+        else:
+            s3 = hex(r3)
+            # r-m
+            Reg_Values[i] = filler(s3)
+            reg_labels[i].config(text=S + ": " + Reg_Values[i])
+            Opcode = Ins[3];
+            D = "1"
+            Word = "1"
+            Mod = "00"
+            Reg = Reg_Table[i]
+            R_M = "110"
+            Disp = convert(Mems[i2])
+            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+            destruct(newWindow)
+            destruct(aNewWindow)
+
+
+def add_rm_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=0, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=0, column=1)
+    templabel2 = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel2.grid(row=1, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=1, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: add_rm_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def add_mr_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if S not in Registers:
+        error.config(text="Invalid Input(s)")
+    elif S1 not in Mems:
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        global Reg_Values
+        global Meg_labels
+        i = Registers.index(S)
+        i2 = Mems.index(S1)
+        r1 = Mem_Values[i2]
+        r2 = Reg_Values[i]
+        r3 = int(r1, 16) + int(r2, 16)
+        if (r3 > 65535):
+            error.config(text="Error: Sum greater than 0xFFFF.")
+        else:
+            s3 = hex(r3)
+            # r-m
+            Mem_Values[i2] = filler(s3)
+            Meg_labels[i2].config(text=S1 + ": " + Mem_Values[i2])
+            Opcode = Ins[3];
+            D = "0"
+            Word = "1"
+            Mod = "00"
+            Reg = Reg_Table[i]
+            R_M = "110"
+            Disp = convert(Mems[i2])
+            opcodegen.config(text = Opcode + D + Word + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp)
+            destruct(newWindow)
+            destruct(aNewWindow)
+
+
+def add_mr_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    templabel2 = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel2.grid(row=0, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=0, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: add_mr_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def add_ri_check(E1, E2):
+    global Registers
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S = S.upper()
+    S1 = E2.get()
+    if (validate(S1) == 0):
+        error.config(text="Invalid Input(s)")
+    elif (S not in Registers):
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        i2 = Registers.index(S)
+        temp = Reg_Values[i2]
+        temp2 = int(temp, 16) + int(S1, 16)
+        if (temp2 > 65535):
+            error.config(text="Error: Sum greater than 0xFFFF.")
+        else:
+            temp3 = hex(temp2)
+            Reg_Values[i2] = filler(temp3)
+            reg_labels[i2].config(text=S + " : " + Reg_Values[i2])
+            Opcode = "1000 00";
+            D = "0"
+            Word = "1"
+            Mod = "00"
+            Reg = Reg_Table[i2]
+            R_M = "110"
+            opcodegen.config(text=Opcode + D + Word + " " + Mod +  R_M + Reg[0:2] + " " + Reg[2:3] )
+
+            destruct(newWindow)
+            destruct(aNewWindow)
+
+
+def add_ri_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Immi: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    templabel2 = Label(newWindow, text="Reg: ", bg='#010329', fg='white')
+    templabel2.grid(row=0, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=0, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: add_ri_check(entry2, entry1), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+def add_mi_check(E1, E2):
+    error = Label(newWindow, text="")
+    error.grid(row=2, column=0, columnspan=3)
+    S = E1.get()
+    S1 = E2.get()
+    if (validate(S1) == 0):
+        error.config(text="Invalid Input(s)")
+    elif (S not in Mems):
+        error.config(text="Invalid Input(s)")
+    else:
+        error.config(text="")
+        i2 = Mems.index(S)
+        temp = Mem_Values[i2]
+        temp2 = int(temp, 16) + int(S1, 16)
+        if (temp2 > 65535):
+            error.config(text="Error: Sum greater than 0xFFFF.")
+        else:
+            temp3 = hex(temp2)
+            Mem_Values[i2] = filler(temp3)
+            Meg_labels[i2].config(text=S + " : " + Mem_Values[i2])
+            Opcode = "1000 00";
+            D = "0"
+            Word = "1"
+            Mod = "00"
+            Reg = "000"
+            R_M = "110"
+            Disp1 = convert (Mems[i2])
+            Disp = convert (Mem_Values[i2])
+            opcodegen.config(text=  Opcode + D + WORD + " " + Mod + Reg[0:2] + " " + Reg[2:3] + R_M + " " + Disp1 + " " + Disp)
+            destruct(newWindow)
+            destruct(aNewWindow)
+
+
+def add_mi_createFormBi():
+    global newWindow
+    newWindow = Tk()
+    newWindow.title("Input")
+    newWindow.resizable(False, False)
+    newWindow.configure(background='#010329')
+    templabel = Label(newWindow, text="Mem: ", bg='#010329', fg='white')
+    templabel.grid(row=1, column=0)
+    entry1 = Entry(newWindow, bg='black', fg='white')
+    entry1.grid(row=1, column=1)
+    templabel2 = Label(newWindow, text="Immi: ", bg='#010329', fg='white')
+    templabel2.grid(row=0, column=0)
+    entry2 = Entry(newWindow, bg='black', fg='white')
+    entry2.grid(row=0, column=1)
+    btn = Button(newWindow, text="Enter",
+                 command=lambda: add_mi_check(entry1, entry2), bg='#010329', fg='white')
+    btn.grid(row=0, column=2, rowspan=2)
+
+
+def add_createFormSelector():
+    global aNewWindow
+    aNewWindow = Tk()
+    aNewWindow.title = "ADD MODE SELECTOR"
+    aNewWindow.resizable(False, False)
+    aNewWindow.configure(background='#010329')
+
+    lab1 = Label(aNewWindow, text="Select the mode of addition ", bg='#010329', fg='white')
+    lab1.grid(row=0, column=1)
+
+    but1 = Button(aNewWindow, text="REG + REG", height=2,
+                  width=15, command=lambda: add_rr_createFormBi(), bg='#010329', fg='white')
+    but1.grid(pady=1, row=1, column=1)
+
+    but2 = Button(aNewWindow, text="REG + MEM", height=2,
+                  width=15, command=lambda: add_rm_createFormBi(), bg='#010329', fg='white')
+    but2.grid(row=2, column=1)
+
+    but3 = Button(aNewWindow, text="MEM + REG", height=2,
+                  width=15, command=lambda: add_mr_createFormBi(), bg='#010329', fg='white')
+    but3.grid(row=3, column=1)
+
+    but4 = Button(aNewWindow, text="REG + IMMEDIATE", height=2,
+                  width=15, command=lambda: add_ri_createFormBi(), bg='#010329', fg='white')
+    but4.grid(row=4, column=1)
+
+    but5 = Button(aNewWindow, text="MEM + IMMEDIATE", height=2,
+                  width=15, command=lambda: add_mi_createFormBi(), bg='#010329', fg='white')
+    but5.grid(row=5, column=1)
+
+
+def add():
+    add_createFormSelector()
